@@ -1,9 +1,8 @@
-package org.example.service;
+package org.example.entity;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.example.enums.VehicleType;
-import org.example.pojo.Vehicle;
+import org.example.entity.Vehicle;
 
 @Setter
 @Getter

@@ -1,4 +1,4 @@
-package org.example.pojo;
+package org.example.entity;
 
 import lombok.Getter;
 import org.example.enums.VehicleColour;

@@ -1,9 +1,8 @@
-package org.example.service;
+package org.example.entity;
 
 import lombok.Getter;
 import org.example.enums.VehicleColour;
 import org.example.exception.ParkingException;
-import org.example.pojo.Vehicle;
 
 import java.util.ArrayList;
 import java.util.List;

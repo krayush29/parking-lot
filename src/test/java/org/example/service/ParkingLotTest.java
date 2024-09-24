@@ -1,9 +1,10 @@
 package org.example.service;
 
+import org.example.entity.ParkingLot;
 import org.example.enums.VehicleColour;
 import org.example.enums.VehicleType;
 import org.example.exception.ParkingException;
-import org.example.pojo.Vehicle;
+import org.example.entity.Vehicle;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -25,11 +26,11 @@ class ParkingLotTest {
 
     @Test
     public void TestExceptionForParkingSpotWithNullNegativeOrZeroSize(){
-        assertThrows(IllegalArgumentException.class, () -> {new ParkingLot(-1);});
+        assertThrows(IllegalArgumentException.class, () -> new ParkingLot(-1));
 
-        assertThrows(IllegalArgumentException.class, () -> {new ParkingLot(0);});
+        assertThrows(IllegalArgumentException.class, () -> new ParkingLot(0));
 
-        assertThrows(IllegalArgumentException.class, () -> {new ParkingLot(null);});
+        assertThrows(IllegalArgumentException.class, () -> new ParkingLot(null));
     }
 
     @Test
@@ -49,7 +50,7 @@ class ParkingLotTest {
 
         Vehicle secondVehicle = new Vehicle("KA-03-QA-1244", VehicleType.CAR, VehicleColour.WHITE);
 
-        assertThrows(ParkingException.class, () -> {parkingLot.parkVehicle(secondVehicle);});
+        assertThrows(ParkingException.class, () -> parkingLot.parkVehicle(secondVehicle));
     }
 
     @Test
@@ -82,7 +83,7 @@ class ParkingLotTest {
         // As All parking spots occupied, we cannot park another vehicle
         Vehicle thirdVehicle = new Vehicle("KA-05-AT-1254", VehicleType.CAR, VehicleColour.RED);
 
-        assertThrows(ParkingException.class, () -> {parkingLot.parkVehicle(thirdVehicle);});
+        assertThrows(ParkingException.class, () -> parkingLot.parkVehicle(thirdVehicle));
     }
 
     @Test
