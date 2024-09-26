@@ -1,10 +1,8 @@
 package org.example.entity;
 
-import lombok.Getter;
 import org.example.enums.VehicleColour;
 import org.example.enums.VehicleType;
 
-@Getter
 public class Vehicle {
     private final String vehicleNumber;
     private final VehicleType vehicleType;
@@ -14,5 +12,9 @@ public class Vehicle {
         this.vehicleNumber = vehicleNumber;
         this.vehicleType = vehicleType;
         this.color = color;
+    }
+
+    public boolean isSameColour(VehicleColour vehicleColour) {
+        return this.color.equals(vehicleColour);
     }
 }
