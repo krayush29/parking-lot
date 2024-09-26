@@ -9,7 +9,6 @@ import java.util.List;
 
 @Getter
 public class ParkingLot {
-    private Integer parkingLotId;
     private final List<ParkingSpot> parkingSpots;
 
     public ParkingLot(Integer numberOfSpots) {

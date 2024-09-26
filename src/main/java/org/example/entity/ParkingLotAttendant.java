@@ -1,20 +1,26 @@
 package org.example.entity;
 
 import lombok.Getter;
-import org.example.entity.ParkingLot;
+import org.example.exception.ParkingLotAssignmentException;
 
-import java.util.Map;
+import java.util.List;
 
 @Getter
 public class ParkingLotAttendant {
-    private final Map<Integer, ParkingLot> parkingLotMap;
+    private final List<ParkingLot> parkingLots;
 
-    public ParkingLotAttendant(Map<Integer, ParkingLot> parkingLotMap) {
-        this.parkingLotMap = parkingLotMap;
+    public ParkingLotAttendant(List<ParkingLot> parkingLots) {
+        this.parkingLots = parkingLots;
     }
 
     public void assignParkingLot(ParkingLot parkingLot) {
-        parkingLotMap.put(parkingLot.getParkingLotId(), parkingLot);
+        if(parkingLots.contains(parkingLot)) {
+            throw new ParkingLotAssignmentException("Parking lot already assigned to the attendant");
+        }
+        parkingLots.add(parkingLot);
     }
 
+    public Ticket parkVehicle(Vehicle vehicle) {
+        return null;
+    }
 }

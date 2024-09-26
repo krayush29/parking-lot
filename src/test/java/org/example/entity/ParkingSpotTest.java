@@ -1,6 +1,5 @@
-package org.example.service;
+package org.example.entity;
 
-import org.example.entity.ParkingSpot;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
