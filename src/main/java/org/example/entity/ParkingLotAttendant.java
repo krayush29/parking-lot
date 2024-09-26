@@ -23,4 +23,8 @@ public class ParkingLotAttendant {
     public Ticket parkVehicle(Vehicle vehicle) {
         return null;
     }
+
+    public void dummyMethod() {
+        return;
+    }
 }
