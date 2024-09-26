@@ -1,6 +1,7 @@
 package org.example.entity;
 
 import org.example.enums.VehicleColour;
+import org.example.exception.VehicleNullException;
 
 public class ParkingSpot {
     private Boolean isAvailable = true;
@@ -11,6 +12,10 @@ public class ParkingSpot {
     }
 
     public void park(Vehicle vehicle) {
+        if(vehicle == null) {
+            throw new VehicleNullException("Vehicle cannot be null");
+        }
+
         this.vehicle = vehicle;
         this.isAvailable = false;
     }

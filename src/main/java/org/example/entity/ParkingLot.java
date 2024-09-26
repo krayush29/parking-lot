@@ -1,9 +1,10 @@
 package org.example.entity;
 
 import org.example.enums.VehicleColour;
-import org.example.exception.ParkingException;
+import org.example.exception.ParkingLotException;
 import org.example.exception.ParkingSpotNotFoundException;
 import org.example.exception.VehicleNotFoundException;
+import org.example.exception.VehicleNullException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,14 +16,15 @@ public class ParkingLot {
         if (numberOfSpots == null || numberOfSpots <= 0)
             throw new IllegalArgumentException("Number Of Spots cannot be null, zero or negative number");
 
-        this.parkingSpots = new ArrayList<>(numberOfSpots);
+        this.parkingSpots = new ArrayList<>();
         for (int i = 0; i < numberOfSpots; i++) {
             this.parkingSpots.add(new ParkingSpot());
         }
     }
 
     public void park(Vehicle vehicle) {
-        if (isVehicleParked(vehicle)) throw new ParkingException("Vehicle already parked : " + vehicle);
+        if (vehicle == null) throw new VehicleNullException("Vehicle cannot be null");
+        if (isVehicleParked(vehicle)) throw new ParkingLotException("Vehicle already parked : " + vehicle);
 
         Integer nearestAvailableSlot = getNearestAvailableSpot();
         if (nearestAvailableSlot == null)
@@ -32,6 +34,8 @@ public class ParkingLot {
     }
 
     public Vehicle unPark(Vehicle vehicle) {
+        if (vehicle == null) throw new VehicleNullException("Vehicle cannot be null");
+
         for (ParkingSpot parkingSpot : parkingSpots) {
             if (!parkingSpot.isAvailable() && parkingSpot.isSameVehicle(vehicle)) {
                 parkingSpot.unPark();

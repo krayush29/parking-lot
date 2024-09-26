@@ -2,22 +2,18 @@ package org.example.entity;
 
 import org.example.enums.VehicleColour;
 import org.example.enums.VehicleType;
-import org.example.exception.ParkingException;
+import org.example.exception.ParkingLotException;
 import org.example.exception.ParkingSpotNotFoundException;
+import org.example.exception.VehicleNullException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.anyString;
 
 class ParkingLotTest {
 
@@ -34,12 +30,28 @@ class ParkingLotTest {
 
     @Test
     public void TestExceptionForParkAtNearestSlotWhenSpotsIsFull() {
-        Vehicle vehicle = new Vehicle("KA-03-QA-1244", VehicleType.CAR, VehicleColour.WHITE);
+        Vehicle firstVehicle = new Vehicle("KA-03-QA-1244", VehicleType.CAR, VehicleColour.WHITE);
+        Vehicle secondVehicle = new Vehicle("KA-03-QA-1244", VehicleType.CAR, VehicleColour.WHITE);
 
-        ParkingLot spyParkingLot = spy(new ParkingLot(1));
-        when(spyParkingLot.getNearestAvailableSpot()).thenReturn(null);
 
-        assertThrows(ParkingSpotNotFoundException.class, () -> spyParkingLot.park(vehicle));
+        ParkingLot parkingLot = new ParkingLot(1);
+        parkingLot.park(firstVehicle);
+
+        assertThrows(ParkingSpotNotFoundException.class, () -> parkingLot.park(secondVehicle));
+    }
+
+    @Test
+    public void TestExceptionWhenNullIsParsedForParking() {
+        ParkingLot parkingLot = new ParkingLot(1);
+
+        assertThrows(VehicleNullException.class, () -> parkingLot.park(null));
+    }
+
+    @Test
+    public void TestExceptionWhenNullIsParsedForUnParking() {
+        ParkingLot parkingLot = new ParkingLot(1);
+
+        assertThrows(VehicleNullException.class, () -> parkingLot.unPark(null));
     }
 
     @Test
@@ -47,14 +59,14 @@ class ParkingLotTest {
         Vehicle firstVehicle = new Vehicle("KA-01-HH-1234", VehicleType.CAR, VehicleColour.WHITE);
         Vehicle secondVehicle = new Vehicle("KA-03-QA-1244", VehicleType.CAR, VehicleColour.WHITE);
 
-        ParkingLot parkingLot = spy(new ParkingLot(5));
+        ParkingLot parkingLot = new ParkingLot(5);
         parkingLot.park(firstVehicle);
         parkingLot.park(secondVehicle);
 
         parkingLot.unPark(firstVehicle);
 
         Integer firstNearestAvailableSlot = parkingLot.getNearestAvailableSpot();
-        parkingLot.park(any(Vehicle.class));
+        parkingLot.park(new Vehicle(anyString(), any(), any()));
         Integer secondNearestAvailableSlot = parkingLot.getNearestAvailableSpot();
 
         assertEquals(0, firstNearestAvailableSlot);
@@ -96,12 +108,12 @@ class ParkingLotTest {
 
         parkingLot.park(vehicle);
 
-        assertThrows(ParkingException.class, () -> parkingLot.park(vehicle));
+        assertThrows(ParkingLotException.class, () -> parkingLot.park(vehicle));
     }
 
     @Test
     void testIfVehicleIsReturnedAfterUnParking() {
-        ParkingLot parkingLot = spy(new ParkingLot(2));
+        ParkingLot parkingLot = new ParkingLot(2);
         Vehicle firstVehicle = new Vehicle("KA-01-HH-1234", VehicleType.CAR, VehicleColour.WHITE);
         Vehicle secondVehicle = new Vehicle("KA-03-QA-1244", VehicleType.CAR, VehicleColour.RED);
         parkingLot.park(firstVehicle);
@@ -110,6 +122,5 @@ class ParkingLotTest {
         Vehicle expectedVehicle = parkingLot.unPark(firstVehicle);
 
         assertEquals(expectedVehicle, firstVehicle);
-        verify(parkingLot, times(1)).unPark(firstVehicle);
     }
 }

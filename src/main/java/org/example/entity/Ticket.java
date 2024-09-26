@@ -1,12 +1,15 @@
 package org.example.entity;
 
-import lombok.Data;
-
-@Data
 public class Ticket {
-    private Vehicle vehicle;
+    private final Vehicle vehicle;
 
     public Ticket(Vehicle vehicle) {
+        if (vehicle == null) throw new IllegalArgumentException("Vehicle cannot be null");
+
         this.vehicle = vehicle;
+    }
+
+    public Vehicle getVehicle() {
+        return this.vehicle;
     }
 }

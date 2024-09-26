@@ -2,6 +2,7 @@ package org.example.entity;
 
 import org.example.exception.ParkingLotAssignmentException;
 import org.example.exception.ParkingSpotNotFoundException;
+import org.example.exception.TicketNullException;
 import org.example.exception.VehicleNotFoundException;
 
 import java.util.List;
@@ -14,9 +15,10 @@ public class ParkingLotAttendant {
     }
 
     public void assign(ParkingLot parkingLot) {
-        if (parkingLots.contains(parkingLot)) {
+        if (parkingLot == null) throw new ParkingLotAssignmentException("Parking lot cannot be null");
+        if (parkingLots.contains(parkingLot))
             throw new ParkingLotAssignmentException("Parking lot already assigned to the attendant");
-        }
+
         parkingLots.add(parkingLot);
     }
 
@@ -36,6 +38,8 @@ public class ParkingLotAttendant {
     }
 
     public Vehicle unPark(Ticket ticket) {
+        if (ticket == null) throw new TicketNullException("Ticket cannot be null");
+
         for (ParkingLot parkingLot : parkingLots) {
             if (parkingLot.isVehicleParked(ticket.getVehicle())) {
                 return parkingLot.unPark(ticket.getVehicle());

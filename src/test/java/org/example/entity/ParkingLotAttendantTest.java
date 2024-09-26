@@ -4,7 +4,9 @@ import org.example.enums.VehicleColour;
 import org.example.enums.VehicleType;
 import org.example.exception.ParkingLotAssignmentException;
 import org.example.exception.ParkingSpotNotFoundException;
+import org.example.exception.TicketNullException;
 import org.example.exception.VehicleNotFoundException;
+import org.example.exception.VehicleNullException;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -15,8 +17,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 class ParkingLotAttendantTest {
@@ -28,6 +30,14 @@ class ParkingLotAttendantTest {
 
         ParkingLot parkingLot = new ParkingLot(5);
         assertDoesNotThrow(() -> parkingLotAttendant.assign(parkingLot));
+    }
+
+    @Test
+    public void TestExceptionAssigningNullParkingLot() {
+        List<ParkingLot> parkingLots = new ArrayList<>();
+        ParkingLotAttendant parkingLotAttendant = new ParkingLotAttendant(parkingLots);
+
+        assertThrows(ParkingLotAssignmentException.class, () -> parkingLotAttendant.assign(null));
     }
 
     @Test
@@ -75,14 +85,15 @@ class ParkingLotAttendantTest {
     }
 
     @Test
-    public void TestExceptionWhenUnParkNonExistingVehicle() {
+    public void TestExceptionWhenNonExistingVehicleUnParked() {
         List<ParkingLot> parkingLots = new ArrayList<>();
         ParkingLotAttendant parkingLotAttendant = new ParkingLotAttendant(parkingLots);
-        ParkingLot parkingLot = spy(new ParkingLot(2));
+        ParkingLot parkingLot = new ParkingLot(2);
+        parkingLotAttendant.assign(parkingLot);
 
-        when(parkingLot.isVehicleParked(any(Vehicle.class))).thenReturn(false);
+        Ticket ticket = new Ticket(new Vehicle(anyString(), any(), any()));
 
-        assertThrows(VehicleNotFoundException.class, () -> parkingLotAttendant.unPark(new Ticket(any(Vehicle.class))));
+        assertThrows(VehicleNotFoundException.class, () -> parkingLotAttendant.unPark(ticket));
     }
 
     @Test
@@ -96,5 +107,27 @@ class ParkingLotAttendantTest {
         Vehicle vehicle = new Vehicle("UP-03-AH-1440", VehicleType.CAR, VehicleColour.WHITE);
 
         assertThrows(ParkingSpotNotFoundException.class, () -> parkingLotAttendant.park(vehicle));
+    }
+
+    @Test
+    public void TestExceptionWhenParkingWithVehicleNull() {
+        List<ParkingLot> parkingLots = new ArrayList<>();
+        ParkingLotAttendant parkingLotAttendant = new ParkingLotAttendant(parkingLots);
+        ParkingLot parkingLot = new ParkingLot(2);
+
+        parkingLotAttendant.assign(parkingLot);
+
+        assertThrows(VehicleNullException.class, () -> parkingLotAttendant.park(null));
+    }
+
+    @Test
+    public void TestExceptionWhenUnParkingWithTicketNull() {
+        List<ParkingLot> parkingLots = new ArrayList<>();
+        ParkingLotAttendant parkingLotAttendant = new ParkingLotAttendant(parkingLots);
+        ParkingLot parkingLot = new ParkingLot(2);
+
+        parkingLotAttendant.assign(parkingLot);
+
+        assertThrows(TicketNullException.class, () -> parkingLotAttendant.unPark(null));
     }
 }
