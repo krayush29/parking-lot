@@ -1,30 +1,19 @@
-package org.example.entity;
+package org.example.entity.role;
 
+import org.example.entity.ParkingLot;
+import org.example.entity.Ticket;
+import org.example.entity.Vehicle;
 import org.example.exception.ParkingLotAssignmentException;
 import org.example.exception.ParkingSpotNotFoundException;
 import org.example.exception.TicketNotFoundException;
 import org.example.exception.TicketNullException;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class ParkingLotAttendant {
-    private final List<ParkingLot> parkingLots;
+public interface Attendant {
 
-    public ParkingLotAttendant() {
-        this.parkingLots = new ArrayList<>();
-    }
-
-    public void assign(ParkingLot parkingLot) {
-        if (parkingLot == null) throw new ParkingLotAssignmentException("Parking lot cannot be null");
-        if (parkingLots.contains(parkingLot))
-            throw new ParkingLotAssignmentException("Parking lot already assigned to the attendant");
-
-        parkingLots.add(parkingLot);
-    }
-
-    public Ticket park(Vehicle vehicle) {
-        if (isVehicleParked(vehicle)) {
+    default Ticket park(List<ParkingLot> parkingLots, Vehicle vehicle) {
+        if (isVehicleParked(parkingLots, vehicle)) {
             throw new ParkingLotAssignmentException("Vehicle already parked : " + vehicle);
         }
 
@@ -37,7 +26,7 @@ public class ParkingLotAttendant {
         throw new ParkingSpotNotFoundException("No Available Parking Spot found for Vehicle : " + vehicle);
     }
 
-    public Vehicle unPark(Ticket ticket) {
+    default Vehicle unPark(List<ParkingLot> parkingLots, Ticket ticket) {
         if (ticket == null) throw new TicketNullException("Ticket cannot be null");
 
         for (ParkingLot parkingLot : parkingLots) {
@@ -48,7 +37,7 @@ public class ParkingLotAttendant {
         throw new TicketNotFoundException("Ticket not found in assigned parking lot: " + ticket);
     }
 
-    private boolean isVehicleParked(Vehicle vehicle) {
+    default boolean isVehicleParked(List<ParkingLot> parkingLots, Vehicle vehicle) {
         for (ParkingLot parkingLot : parkingLots) {
             if (parkingLot.contains(vehicle)) {
                 return true;

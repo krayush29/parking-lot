@@ -1,5 +1,9 @@
-package org.example.entity;
+package org.example.entity.role;
 
+import org.example.entity.ParkingLot;
+import org.example.entity.Ticket;
+import org.example.entity.Vehicle;
+import org.example.entity.role.implementation.ParkingLotAttendant;
 import org.example.enums.VehicleColour;
 import org.example.enums.VehicleType;
 import org.example.exception.ParkingLotAssignmentException;
@@ -13,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 class ParkingLotAttendantTest {
@@ -89,7 +93,7 @@ class ParkingLotAttendantTest {
     public void TestExceptionWhenAllParkingLotsAreFull() {
         ParkingLotAttendant parkingLotAttendant = new ParkingLotAttendant();
 
-        ParkingLot mockParkingLot = mock(ParkingLot.class);
+        ParkingLot mockParkingLot = spy(new ParkingLot(1));
         when(mockParkingLot.getNearestAvailableSpot()).thenReturn(null);
 
         Vehicle vehicle = new Vehicle("UP-03-AH-1440", VehicleType.CAR, VehicleColour.WHITE);
