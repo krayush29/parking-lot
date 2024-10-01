@@ -5,13 +5,14 @@ import org.example.exception.ParkingSpotNotFoundException;
 import org.example.exception.TicketNullException;
 import org.example.exception.VehicleNotFoundException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ParkingLotAttendant {
     private final List<ParkingLot> parkingLots;
 
-    public ParkingLotAttendant(List<ParkingLot> parkingLots) {
-        this.parkingLots = parkingLots;
+    public ParkingLotAttendant() {
+        this.parkingLots = new ArrayList<>();
     }
 
     public void assign(ParkingLot parkingLot) {

@@ -9,9 +9,6 @@ import org.example.exception.VehicleNotFoundException;
 import org.example.exception.VehicleNullException;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -25,8 +22,7 @@ class ParkingLotAttendantTest {
 
     @Test
     public void TestAssignParkingLotToAttendant() {
-        List<ParkingLot> parkingLots = new ArrayList<>();
-        ParkingLotAttendant parkingLotAttendant = new ParkingLotAttendant(parkingLots);
+        ParkingLotAttendant parkingLotAttendant = new ParkingLotAttendant();
 
         ParkingLot parkingLot = new ParkingLot(5);
         assertDoesNotThrow(() -> parkingLotAttendant.assign(parkingLot));
@@ -34,16 +30,14 @@ class ParkingLotAttendantTest {
 
     @Test
     public void TestExceptionAssigningNullParkingLot() {
-        List<ParkingLot> parkingLots = new ArrayList<>();
-        ParkingLotAttendant parkingLotAttendant = new ParkingLotAttendant(parkingLots);
+        ParkingLotAttendant parkingLotAttendant = new ParkingLotAttendant();
 
         assertThrows(ParkingLotAssignmentException.class, () -> parkingLotAttendant.assign(null));
     }
 
     @Test
     public void TestAssignSameParkingLotAgainToAttendant() {
-        List<ParkingLot> parkingLots = new ArrayList<>();
-        ParkingLotAttendant parkingLotAttendant = new ParkingLotAttendant(parkingLots);
+        ParkingLotAttendant parkingLotAttendant = new ParkingLotAttendant();
         ParkingLot parkingLot = new ParkingLot(5);
         parkingLotAttendant.assign(parkingLot);
 
@@ -52,9 +46,8 @@ class ParkingLotAttendantTest {
 
     @Test
     public void TestAttendantToParkVehicleWithTicket() {
-        List<ParkingLot> parkingLots = new ArrayList<>();
         ParkingLot parkingLot = new ParkingLot(5);
-        ParkingLotAttendant parkingLotAttendant = new ParkingLotAttendant(parkingLots);
+        ParkingLotAttendant parkingLotAttendant = new ParkingLotAttendant();
         parkingLotAttendant.assign(parkingLot);
 
         Vehicle vehicle = new Vehicle("KA-01-HH-1234", VehicleType.CAR, VehicleColour.WHITE);
@@ -67,8 +60,7 @@ class ParkingLotAttendantTest {
 
     @Test
     public void TestParkAtSecondParkingLotWhenFirstParkingLotIsFull() {
-        List<ParkingLot> parkingLots = new ArrayList<>();
-        ParkingLotAttendant parkingLotAttendant = new ParkingLotAttendant(parkingLots);
+        ParkingLotAttendant parkingLotAttendant = new ParkingLotAttendant();
         ParkingLot firstParkingLot = new ParkingLot(1);
         ParkingLot secondParkingLot = new ParkingLot(1);
         Vehicle firstVehicle = new Vehicle("KA-01-HH-1234", VehicleType.CAR, VehicleColour.WHITE);
@@ -86,8 +78,7 @@ class ParkingLotAttendantTest {
 
     @Test
     public void TestExceptionWhenNonExistingVehicleUnParked() {
-        List<ParkingLot> parkingLots = new ArrayList<>();
-        ParkingLotAttendant parkingLotAttendant = new ParkingLotAttendant(parkingLots);
+        ParkingLotAttendant parkingLotAttendant = new ParkingLotAttendant();
         ParkingLot parkingLot = new ParkingLot(2);
         parkingLotAttendant.assign(parkingLot);
 
@@ -98,8 +89,7 @@ class ParkingLotAttendantTest {
 
     @Test
     public void TestExceptionWhenAllParkingLotsAreFull() {
-        List<ParkingLot> parkingLots = new ArrayList<>();
-        ParkingLotAttendant parkingLotAttendant = new ParkingLotAttendant(parkingLots);
+        ParkingLotAttendant parkingLotAttendant = new ParkingLotAttendant();
 
         ParkingLot mockParkingLot = mock(ParkingLot.class);
         when(mockParkingLot.getNearestAvailableSpot()).thenReturn(null);
@@ -111,8 +101,7 @@ class ParkingLotAttendantTest {
 
     @Test
     public void TestExceptionWhenParkingWithVehicleNull() {
-        List<ParkingLot> parkingLots = new ArrayList<>();
-        ParkingLotAttendant parkingLotAttendant = new ParkingLotAttendant(parkingLots);
+        ParkingLotAttendant parkingLotAttendant = new ParkingLotAttendant();
         ParkingLot parkingLot = new ParkingLot(2);
 
         parkingLotAttendant.assign(parkingLot);
@@ -122,8 +111,7 @@ class ParkingLotAttendantTest {
 
     @Test
     public void TestExceptionWhenUnParkingWithTicketNull() {
-        List<ParkingLot> parkingLots = new ArrayList<>();
-        ParkingLotAttendant parkingLotAttendant = new ParkingLotAttendant(parkingLots);
+        ParkingLotAttendant parkingLotAttendant = new ParkingLotAttendant();
         ParkingLot parkingLot = new ParkingLot(2);
 
         parkingLotAttendant.assign(parkingLot);
