@@ -4,6 +4,7 @@ import org.example.enums.VehicleColour;
 import org.example.enums.VehicleType;
 import org.example.exception.ParkingLotException;
 import org.example.exception.ParkingSpotNotFoundException;
+import org.example.exception.TicketNullException;
 import org.example.exception.VehicleNullException;
 import org.junit.jupiter.api.Test;
 
@@ -51,7 +52,7 @@ class ParkingLotTest {
     public void TestExceptionWhenNullIsParsedForUnParking() {
         ParkingLot parkingLot = new ParkingLot(1);
 
-        assertThrows(VehicleNullException.class, () -> parkingLot.unPark(null));
+        assertThrows(TicketNullException.class, () -> parkingLot.unPark(null));
     }
 
     @Test
@@ -60,10 +61,10 @@ class ParkingLotTest {
         Vehicle secondVehicle = new Vehicle("KA-03-QA-1244", VehicleType.CAR, VehicleColour.WHITE);
 
         ParkingLot parkingLot = new ParkingLot(5);
-        parkingLot.park(firstVehicle);
+        Ticket ticket = parkingLot.park(firstVehicle);
         parkingLot.park(secondVehicle);
 
-        parkingLot.unPark(firstVehicle);
+        parkingLot.unPark(ticket);
 
         Integer firstNearestAvailableSlot = parkingLot.getNearestAvailableSpot();
         parkingLot.park(new Vehicle(anyString(), any(), any()));
@@ -97,8 +98,8 @@ class ParkingLotTest {
         parkingLot.park(firstVehicle);
         parkingLot.park(secondVehicle);
 
-        assertTrue(parkingLot.isVehicleParked(firstVehicle));
-        assertTrue(parkingLot.isVehicleParked(secondVehicle));
+        assertTrue(parkingLot.contains(firstVehicle));
+        assertTrue(parkingLot.contains(secondVehicle));
     }
 
     @Test
@@ -116,10 +117,10 @@ class ParkingLotTest {
         ParkingLot parkingLot = new ParkingLot(2);
         Vehicle firstVehicle = new Vehicle("KA-01-HH-1234", VehicleType.CAR, VehicleColour.WHITE);
         Vehicle secondVehicle = new Vehicle("KA-03-QA-1244", VehicleType.CAR, VehicleColour.RED);
-        parkingLot.park(firstVehicle);
+        Ticket ticket = parkingLot.park(firstVehicle);
         parkingLot.park(secondVehicle);
 
-        Vehicle expectedVehicle = parkingLot.unPark(firstVehicle);
+        Vehicle expectedVehicle = parkingLot.unPark(ticket);
 
         assertEquals(expectedVehicle, firstVehicle);
     }

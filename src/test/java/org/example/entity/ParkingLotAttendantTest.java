@@ -4,8 +4,8 @@ import org.example.enums.VehicleColour;
 import org.example.enums.VehicleType;
 import org.example.exception.ParkingLotAssignmentException;
 import org.example.exception.ParkingSpotNotFoundException;
+import org.example.exception.TicketNotFoundException;
 import org.example.exception.TicketNullException;
-import org.example.exception.VehicleNotFoundException;
 import org.example.exception.VehicleNullException;
 import org.junit.jupiter.api.Test;
 
@@ -13,8 +13,6 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -45,7 +43,7 @@ class ParkingLotAttendantTest {
     }
 
     @Test
-    public void TestAttendantToParkVehicleWithTicket() {
+    public void TestAttendantToUnParkVehicleWithTicket() {
         ParkingLot parkingLot = new ParkingLot(5);
         ParkingLotAttendant parkingLotAttendant = new ParkingLotAttendant();
         parkingLotAttendant.assign(parkingLot);
@@ -72,8 +70,8 @@ class ParkingLotAttendantTest {
         parkingLotAttendant.park(firstVehicle);
         parkingLotAttendant.park(secondVehicle);
 
-        assertTrue(firstParkingLot.isVehicleParked(firstVehicle));
-        assertTrue(secondParkingLot.isVehicleParked(secondVehicle));
+        assertTrue(firstParkingLot.contains(firstVehicle));
+        assertTrue(secondParkingLot.contains(secondVehicle));
     }
 
     @Test
@@ -82,9 +80,9 @@ class ParkingLotAttendantTest {
         ParkingLot parkingLot = new ParkingLot(2);
         parkingLotAttendant.assign(parkingLot);
 
-        Ticket ticket = new Ticket(new Vehicle(anyString(), any(), any()));
+        Ticket ticket = new Ticket();
 
-        assertThrows(VehicleNotFoundException.class, () -> parkingLotAttendant.unPark(ticket));
+        assertThrows(TicketNotFoundException.class, () -> parkingLotAttendant.unPark(ticket));
     }
 
     @Test

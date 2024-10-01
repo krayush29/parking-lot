@@ -3,7 +3,8 @@ package org.example.entity;
 import org.example.enums.VehicleColour;
 import org.example.exception.ParkingLotException;
 import org.example.exception.ParkingSpotNotFoundException;
-import org.example.exception.VehicleNotFoundException;
+import org.example.exception.TicketNotFoundException;
+import org.example.exception.TicketNullException;
 import org.example.exception.VehicleNullException;
 
 import java.util.ArrayList;
@@ -22,27 +23,26 @@ public class ParkingLot {
         }
     }
 
-    public void park(Vehicle vehicle) {
+    public Ticket park(Vehicle vehicle) {
         if (vehicle == null) throw new VehicleNullException("Vehicle cannot be null");
-        if (isVehicleParked(vehicle)) throw new ParkingLotException("Vehicle already parked : " + vehicle);
+        if (contains(vehicle)) throw new ParkingLotException("Vehicle already parked : " + vehicle);
 
         Integer nearestAvailableSlot = getNearestAvailableSpot();
         if (nearestAvailableSlot == null)
             throw new ParkingSpotNotFoundException("No Available Parking Spot found for Vehicle : " + vehicle);
 
-        parkingSpots.get(nearestAvailableSlot).park(vehicle);
+        return parkingSpots.get(nearestAvailableSlot).park(vehicle);
     }
 
-    public Vehicle unPark(Vehicle vehicle) {
-        if (vehicle == null) throw new VehicleNullException("Vehicle cannot be null");
+    public Vehicle unPark(Ticket ticket) {
+        if (ticket == null) throw new TicketNullException("Ticket cannot be null");
 
         for (ParkingSpot parkingSpot : parkingSpots) {
-            if (!parkingSpot.isAvailable() && parkingSpot.isSameVehicle(vehicle)) {
-                parkingSpot.unPark();
-                return vehicle;
+            if (parkingSpot.isSameTicket(ticket)) {
+                return parkingSpot.unPark(ticket);
             }
         }
-        throw new VehicleNotFoundException("Vehicle not parked : " + vehicle);
+        throw new TicketNotFoundException("Ticket is not associated any assigned parking spot: " + ticket);
     }
 
     public int getVehicleCountByColour(VehicleColour vehicleColour) {
@@ -55,13 +55,6 @@ public class ParkingLot {
         return count;
     }
 
-    public boolean isVehicleParked(Vehicle vehicle) {
-        for (ParkingSpot parkingSpot : parkingSpots) {
-            if (!parkingSpot.isAvailable() && parkingSpot.isSameVehicle(vehicle)) return true;
-        }
-        return false;
-    }
-
     public Integer getNearestAvailableSpot() {
         for (int i = 0; i < parkingSpots.size(); i++) {
             if (parkingSpots.get(i).isAvailable()) {
@@ -69,5 +62,19 @@ public class ParkingLot {
             }
         }
         return null;
+    }
+
+    public boolean contains(Ticket ticket) {
+        for (ParkingSpot parkingSpot : parkingSpots) {
+            if (parkingSpot.isSameTicket(ticket)) return true;
+        }
+        return false;
+    }
+
+    public boolean contains(Vehicle vehicle) {
+        for (ParkingSpot parkingSpot : parkingSpots) {
+            if (parkingSpot.isSameVehicle(vehicle)) return true;
+        }
+        return false;
     }
 }

@@ -34,8 +34,8 @@ class ParkingSpotTest {
     @Test
     public void TestisAvailableBecomeTrueAfterUnParking() {
         ParkingSpot parkingSpot = new ParkingSpot();
-        parkingSpot.park(new Vehicle(anyString(), any(), any()));
-        parkingSpot.unPark();
+        Ticket ticket = parkingSpot.park(new Vehicle(anyString(), any(), any()));
+        parkingSpot.unPark(ticket);
 
         assertTrue(parkingSpot.isAvailable());
     }

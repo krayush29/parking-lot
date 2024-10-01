@@ -2,8 +2,8 @@ package org.example.entity;
 
 import org.example.exception.ParkingLotAssignmentException;
 import org.example.exception.ParkingSpotNotFoundException;
+import org.example.exception.TicketNotFoundException;
 import org.example.exception.TicketNullException;
-import org.example.exception.VehicleNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,8 +30,7 @@ public class ParkingLotAttendant {
 
         for (ParkingLot parkingLot : parkingLots) {
             if (parkingLot.getNearestAvailableSpot() != null) {
-                parkingLot.park(vehicle);
-                return new Ticket(vehicle);
+                return parkingLot.park(vehicle);
             }
         }
 
@@ -42,16 +41,16 @@ public class ParkingLotAttendant {
         if (ticket == null) throw new TicketNullException("Ticket cannot be null");
 
         for (ParkingLot parkingLot : parkingLots) {
-            if (parkingLot.isVehicleParked(ticket.getVehicle())) {
-                return parkingLot.unPark(ticket.getVehicle());
+            if (parkingLot.contains(ticket)) {
+                return parkingLot.unPark(ticket);
             }
         }
-        throw new VehicleNotFoundException("Vehicle not parked : " + ticket.getVehicle());
+        throw new TicketNotFoundException("Ticket not found in assigned parking lot: " + ticket);
     }
 
     private boolean isVehicleParked(Vehicle vehicle) {
         for (ParkingLot parkingLot : parkingLots) {
-            if (parkingLot.isVehicleParked(vehicle)) {
+            if (parkingLot.contains(vehicle)) {
                 return true;
             }
         }
