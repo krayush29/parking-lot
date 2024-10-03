@@ -8,9 +8,9 @@ import org.example.exception.ParkingSpotNotFoundException;
 
 import java.util.List;
 
-public interface SmartAttendant extends Attendant {
+public interface SmartAttendable extends Attendable {
 
-    default Ticket smartPark(List<ParkingLot> parkingLots, Vehicle vehicle) {
+    default Ticket park(List<ParkingLot> parkingLots, Vehicle vehicle) {
         if (isVehicleParked(parkingLots, vehicle)) {
             throw new ParkingLotAssignmentException("Vehicle already parked : " + vehicle);
         }

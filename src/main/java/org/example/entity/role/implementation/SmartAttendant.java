@@ -3,16 +3,17 @@ package org.example.entity.role.implementation;
 import org.example.entity.ParkingLot;
 import org.example.entity.Ticket;
 import org.example.entity.Vehicle;
-import org.example.entity.role.Attendant;
+import org.example.entity.role.SmartAttendable;
 import org.example.exception.ParkingLotAssignmentException;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ParkingLotAttendant implements Attendant {
+public class SmartAttendant implements SmartAttendable {
+
     private final List<ParkingLot> parkingLots;
 
-    public ParkingLotAttendant() {
+    public SmartAttendant() {
         this.parkingLots = new ArrayList<>();
     }
 

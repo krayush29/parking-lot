@@ -3,7 +3,7 @@ package org.example.entity.role;
 import org.example.entity.ParkingLot;
 import org.example.entity.Ticket;
 import org.example.entity.Vehicle;
-import org.example.entity.role.implementation.ParkingLotAttendant;
+import org.example.entity.role.implementation.Attendant;
 import org.example.enums.VehicleColour;
 import org.example.enums.VehicleType;
 import org.example.exception.ParkingLotAssignmentException;
@@ -20,59 +20,59 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 
-class ParkingLotAttendantTest {
+class AttendantTest {
 
     @Test
     public void TestAssignParkingLotToAttendant() {
-        ParkingLotAttendant parkingLotAttendant = new ParkingLotAttendant();
+        Attendant attendant = new Attendant();
 
         ParkingLot parkingLot = new ParkingLot(5);
-        assertDoesNotThrow(() -> parkingLotAttendant.assign(parkingLot));
+        assertDoesNotThrow(() -> attendant.assign(parkingLot));
     }
 
     @Test
     public void TestExceptionAssigningNullParkingLot() {
-        ParkingLotAttendant parkingLotAttendant = new ParkingLotAttendant();
+        Attendant attendant = new Attendant();
 
-        assertThrows(ParkingLotAssignmentException.class, () -> parkingLotAttendant.assign(null));
+        assertThrows(ParkingLotAssignmentException.class, () -> attendant.assign(null));
     }
 
     @Test
     public void TestAssignSameParkingLotAgainToAttendant() {
-        ParkingLotAttendant parkingLotAttendant = new ParkingLotAttendant();
+        Attendant attendant = new Attendant();
         ParkingLot parkingLot = new ParkingLot(5);
-        parkingLotAttendant.assign(parkingLot);
+        attendant.assign(parkingLot);
 
-        assertThrows(ParkingLotAssignmentException.class, () -> parkingLotAttendant.assign(parkingLot));
+        assertThrows(ParkingLotAssignmentException.class, () -> attendant.assign(parkingLot));
     }
 
     @Test
     public void TestAttendantToUnParkVehicleWithTicket() {
         ParkingLot parkingLot = new ParkingLot(5);
-        ParkingLotAttendant parkingLotAttendant = new ParkingLotAttendant();
-        parkingLotAttendant.assign(parkingLot);
+        Attendant attendant = new Attendant();
+        attendant.assign(parkingLot);
 
         Vehicle vehicle = new Vehicle("KA-01-HH-1234", VehicleType.CAR, VehicleColour.WHITE);
 
-        Ticket ticket = parkingLotAttendant.park(vehicle);
-        Vehicle unparkedVehicle = parkingLotAttendant.unPark(ticket);
+        Ticket ticket = attendant.park(vehicle);
+        Vehicle unparkedVehicle = attendant.unPark(ticket);
 
         assertEquals(unparkedVehicle, vehicle);
     }
 
     @Test
     public void TestParkAtSecondParkingLotWhenFirstParkingLotIsFull() {
-        ParkingLotAttendant parkingLotAttendant = new ParkingLotAttendant();
+        Attendant attendant = new Attendant();
         ParkingLot firstParkingLot = new ParkingLot(1);
         ParkingLot secondParkingLot = new ParkingLot(1);
         Vehicle firstVehicle = new Vehicle("KA-01-HH-1234", VehicleType.CAR, VehicleColour.WHITE);
         Vehicle secondVehicle = new Vehicle("KA-03-QA-1244", VehicleType.CAR, VehicleColour.WHITE);
 
-        parkingLotAttendant.assign(firstParkingLot);
-        parkingLotAttendant.assign(secondParkingLot);
+        attendant.assign(firstParkingLot);
+        attendant.assign(secondParkingLot);
 
-        parkingLotAttendant.park(firstVehicle);
-        parkingLotAttendant.park(secondVehicle);
+        attendant.park(firstVehicle);
+        attendant.park(secondVehicle);
 
         assertTrue(firstParkingLot.contains(firstVehicle));
         assertTrue(secondParkingLot.contains(secondVehicle));
@@ -80,43 +80,43 @@ class ParkingLotAttendantTest {
 
     @Test
     public void TestExceptionWhenNonExistingVehicleUnParked() {
-        ParkingLotAttendant parkingLotAttendant = new ParkingLotAttendant();
+        Attendant attendant = new Attendant();
         ParkingLot parkingLot = new ParkingLot(2);
-        parkingLotAttendant.assign(parkingLot);
+        attendant.assign(parkingLot);
 
         Ticket ticket = new Ticket();
 
-        assertThrows(TicketNotFoundException.class, () -> parkingLotAttendant.unPark(ticket));
+        assertThrows(TicketNotFoundException.class, () -> attendant.unPark(ticket));
     }
 
     @Test
     public void TestExceptionWhenAllParkingLotsAreFull() {
-        ParkingLotAttendant parkingLotAttendant = new ParkingLotAttendant();
+        Attendant attendant = new Attendant();
         ParkingLot parkingLot = new ParkingLot(1);
 
-        parkingLotAttendant.assign(parkingLot);
-        parkingLotAttendant.park(new Vehicle(anyString(), any(), any()));
+        attendant.assign(parkingLot);
+        attendant.park(new Vehicle(anyString(), any(), any()));
 
-        assertThrows(ParkingSpotNotFoundException.class, () -> parkingLotAttendant.park(new Vehicle(anyString(), any(), any())));
+        assertThrows(ParkingSpotNotFoundException.class, () -> attendant.park(new Vehicle(anyString(), any(), any())));
     }
 
     @Test
     public void TestExceptionWhenParkingWithVehicleNull() {
-        ParkingLotAttendant parkingLotAttendant = new ParkingLotAttendant();
+        Attendant attendant = new Attendant();
         ParkingLot parkingLot = new ParkingLot(2);
 
-        parkingLotAttendant.assign(parkingLot);
+        attendant.assign(parkingLot);
 
-        assertThrows(VehicleNullException.class, () -> parkingLotAttendant.park(null));
+        assertThrows(VehicleNullException.class, () -> attendant.park(null));
     }
 
     @Test
     public void TestExceptionWhenUnParkingWithTicketNull() {
-        ParkingLotAttendant parkingLotAttendant = new ParkingLotAttendant();
+        Attendant attendant = new Attendant();
         ParkingLot parkingLot = new ParkingLot(2);
 
-        parkingLotAttendant.assign(parkingLot);
+        attendant.assign(parkingLot);
 
-        assertThrows(TicketNullException.class, () -> parkingLotAttendant.unPark(null));
+        assertThrows(TicketNullException.class, () -> attendant.unPark(null));
     }
 }

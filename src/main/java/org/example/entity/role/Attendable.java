@@ -10,7 +10,7 @@ import org.example.exception.TicketNullException;
 
 import java.util.List;
 
-public interface Attendant {
+public interface Attendable {
 
     default Ticket park(List<ParkingLot> parkingLots, Vehicle vehicle) {
         if (isVehicleParked(parkingLots, vehicle)) {
