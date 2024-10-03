@@ -15,7 +15,7 @@ class OwnerTest {
     public void TestAssignParkingLotToAnAttendant() {
         Owner owner = new Owner();
         Attendant attendant = new Attendant();
-        ParkingLot parkingLot = new ParkingLot(5);
+        ParkingLot parkingLot = owner.createParkingLot(5);
 
         assertDoesNotThrow(() -> owner.assign(attendant, parkingLot));
     }
@@ -24,8 +24,8 @@ class OwnerTest {
     public void TestAssignMoreThanOneParkingLotToAnAttendant() {
         Owner owner = new Owner();
         Attendant attendant = new Attendant();
-        ParkingLot firstParkingLot = new ParkingLot(5);
-        ParkingLot SecondParkingLot = new ParkingLot(10);
+        ParkingLot firstParkingLot = owner.createParkingLot(5);
+        ParkingLot SecondParkingLot = owner.createParkingLot(10);
 
         assertDoesNotThrow(() -> owner.assign(attendant, firstParkingLot));
         assertDoesNotThrow(() -> owner.assign(attendant, SecondParkingLot));
@@ -35,7 +35,7 @@ class OwnerTest {
     public void TestExceptionWhenAssignParkingLotAgainToAnAttendant() {
         Owner owner = new Owner();
         Attendant attendant = new Attendant();
-        ParkingLot parkingLot = new ParkingLot(5);
+        ParkingLot parkingLot = owner.createParkingLot(5);
 
         assertDoesNotThrow(() -> owner.assign(attendant, parkingLot));
         assertThrows(ParkingLotAssignmentException.class, () -> owner.assign(attendant, parkingLot));
@@ -52,7 +52,7 @@ class OwnerTest {
     @Test
     public void TestExceptionWhenAssignParkingLotToNULLAttendant() {
         Owner owner = new Owner();
-        ParkingLot parkingLot = new ParkingLot(5);
+        ParkingLot parkingLot = owner.createParkingLot(5);
 
         assertThrows(ParkingLotAssignmentException.class, () -> owner.assign(null, parkingLot));
     }

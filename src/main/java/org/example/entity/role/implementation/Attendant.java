@@ -20,7 +20,7 @@ public class Attendant implements Attendable {
         this.strategy = new NormalParkStrategy();
     }
 
-    public void assign(ParkingLot parkingLot) {
+    void assign(ParkingLot parkingLot) {
         if (parkingLot == null) throw new ParkingLotAssignmentException("Parking lot cannot be null");
         if (parkingLots.contains(parkingLot))
             throw new ParkingLotAssignmentException("Parking lot already assigned to the attendant");

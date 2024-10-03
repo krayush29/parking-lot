@@ -1,5 +1,6 @@
 package org.example.entity;
 
+import org.example.entity.role.implementation.Owner;
 import org.example.enums.VehicleColour;
 import org.example.exception.ParkingLotException;
 import org.example.exception.ParkingSpotNotFoundException;
@@ -13,7 +14,9 @@ import java.util.List;
 public class ParkingLot {
     private final List<ParkingSpot> parkingSpots;
 
-    public ParkingLot(Integer numberOfSpots) {
+    public ParkingLot(Integer numberOfSpots, Owner createdBy) {
+        if (createdBy == null) throw new IllegalArgumentException("Owner cannot be null");
+
         if (numberOfSpots == null || numberOfSpots <= 0)
             throw new IllegalArgumentException("Number Of Spots cannot be null, zero or negative number");
 

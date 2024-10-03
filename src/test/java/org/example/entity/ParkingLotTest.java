@@ -1,5 +1,6 @@
 package org.example.entity;
 
+import org.example.entity.role.implementation.Owner;
 import org.example.enums.VehicleColour;
 import org.example.enums.VehicleType;
 import org.example.exception.ParkingLotException;
@@ -20,22 +21,21 @@ class ParkingLotTest {
 
     @Test
     public void TestExceptionForParkingSpotWithNullNegativeOrZeroSize() {
-        assertDoesNotThrow(() -> new ParkingLot(1));
+        Owner owner = new Owner();
+        assertDoesNotThrow(() -> owner.createParkingLot(1));
 
-        assertThrows(IllegalArgumentException.class, () -> new ParkingLot(-1));
+        assertThrows(IllegalArgumentException.class, () -> owner.createParkingLot(-1));
 
-        assertThrows(IllegalArgumentException.class, () -> new ParkingLot(0));
-
-        assertThrows(IllegalArgumentException.class, () -> new ParkingLot(null));
+        assertThrows(IllegalArgumentException.class, () -> owner.createParkingLot(0));
     }
 
     @Test
     public void TestExceptionForParkAtNearestSlotWhenSpotsIsFull() {
+        Owner owner = new Owner();
         Vehicle firstVehicle = new Vehicle("KA-03-QA-1244", VehicleType.CAR, VehicleColour.WHITE);
         Vehicle secondVehicle = new Vehicle("KA-03-QA-1244", VehicleType.CAR, VehicleColour.WHITE);
 
-
-        ParkingLot parkingLot = new ParkingLot(1);
+        ParkingLot parkingLot = owner.createParkingLot(1);
         parkingLot.park(firstVehicle);
 
         assertThrows(ParkingSpotNotFoundException.class, () -> parkingLot.park(secondVehicle));
@@ -43,24 +43,27 @@ class ParkingLotTest {
 
     @Test
     public void TestExceptionWhenNullIsParsedForParking() {
-        ParkingLot parkingLot = new ParkingLot(1);
+        Owner owner = new Owner();
+        ParkingLot parkingLot = owner.createParkingLot(1);
 
         assertThrows(VehicleNullException.class, () -> parkingLot.park(null));
     }
 
     @Test
     public void TestExceptionWhenNullIsParsedForUnParking() {
-        ParkingLot parkingLot = new ParkingLot(1);
+        Owner owner = new Owner();
+        ParkingLot parkingLot = owner.createParkingLot(1);
 
         assertThrows(TicketNullException.class, () -> parkingLot.unPark(null));
     }
 
     @Test
     public void TestParkVehicleToNearestAvailableSpot() {
+        Owner owner = new Owner();
         Vehicle firstVehicle = new Vehicle("KA-01-HH-1234", VehicleType.CAR, VehicleColour.WHITE);
         Vehicle secondVehicle = new Vehicle("KA-03-QA-1244", VehicleType.CAR, VehicleColour.WHITE);
 
-        ParkingLot parkingLot = new ParkingLot(5);
+        ParkingLot parkingLot = owner.createParkingLot(5);
         Ticket ticket = parkingLot.park(firstVehicle);
         parkingLot.park(secondVehicle);
 
@@ -76,12 +79,13 @@ class ParkingLotTest {
 
     @Test
     public void TestGetVehicleCountByColourRed() {
+        Owner owner = new Owner();
         Vehicle firstVehicle = new Vehicle("KA-01-HH-1234", VehicleType.CAR, VehicleColour.WHITE);
         Vehicle secondVehicle = new Vehicle("KA-03-QA-1244", VehicleType.CAR, VehicleColour.RED);
         Vehicle thirdVehicle = new Vehicle("KA-05-AT-1254", VehicleType.CAR, VehicleColour.RED);
 
 
-        ParkingLot parkingLot = new ParkingLot(5);
+        ParkingLot parkingLot = owner.createParkingLot(5);
         parkingLot.park(firstVehicle);
         parkingLot.park(secondVehicle);
         parkingLot.park(thirdVehicle);
@@ -91,10 +95,11 @@ class ParkingLotTest {
 
     @Test
     public void TestGivenVehicleIsParked() {
+        Owner owner = new Owner();
         Vehicle firstVehicle = new Vehicle("KA-01-HH-1234", VehicleType.CAR, VehicleColour.WHITE);
         Vehicle secondVehicle = new Vehicle("KA-03-QA-1244", VehicleType.CAR, VehicleColour.RED);
 
-        ParkingLot parkingLot = new ParkingLot(5);
+        ParkingLot parkingLot = owner.createParkingLot(5);
         parkingLot.park(firstVehicle);
         parkingLot.park(secondVehicle);
 
@@ -104,7 +109,8 @@ class ParkingLotTest {
 
     @Test
     public void TestExceptionWhenSameVehicleIsParkedAgain() {
-        ParkingLot parkingLot = new ParkingLot(5);
+        Owner owner = new Owner();
+        ParkingLot parkingLot = owner.createParkingLot(5);
         Vehicle vehicle = new Vehicle("KA-01-HH-1234", VehicleType.CAR, VehicleColour.WHITE);
 
         parkingLot.park(vehicle);
@@ -114,7 +120,8 @@ class ParkingLotTest {
 
     @Test
     void testIfVehicleIsReturnedAfterUnParking() {
-        ParkingLot parkingLot = new ParkingLot(2);
+        Owner owner = new Owner();
+        ParkingLot parkingLot = owner.createParkingLot(2);
         Vehicle firstVehicle = new Vehicle("KA-01-HH-1234", VehicleType.CAR, VehicleColour.WHITE);
         Vehicle secondVehicle = new Vehicle("KA-03-QA-1244", VehicleType.CAR, VehicleColour.RED);
         Ticket ticket = parkingLot.park(firstVehicle);

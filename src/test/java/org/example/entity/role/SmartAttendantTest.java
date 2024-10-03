@@ -3,6 +3,7 @@ package org.example.entity.role;
 import org.example.entity.ParkingLot;
 import org.example.entity.Ticket;
 import org.example.entity.Vehicle;
+import org.example.entity.role.implementation.Owner;
 import org.example.entity.role.implementation.SmartAttendant;
 import org.example.exception.ParkingSpotNotFoundException;
 import org.junit.jupiter.api.Test;
@@ -17,22 +18,24 @@ class SmartAttendantTest {
 
     @Test
     public void TestAssignParkingLotToSmartAttendant() {
-        SmartAttendant parkingLotSmartAttendant = new SmartAttendant();
+        Owner owner = new Owner();
+        SmartAttendant smartAttendant = new SmartAttendant();
 
-        ParkingLot parkingLot = new ParkingLot(5);
-        assertDoesNotThrow(() -> parkingLotSmartAttendant.assign(parkingLot));
+        ParkingLot parkingLot = owner.createParkingLot(5);
+        assertDoesNotThrow(() -> owner.assign(smartAttendant, parkingLot));
     }
 
     @Test
     public void TestSmartAttendantToUnParkVehicleWithTicket() {
-        ParkingLot parkingLot = new ParkingLot(5);
-        SmartAttendant parkingLotSmartAttendant = new SmartAttendant();
-        parkingLotSmartAttendant.assign(parkingLot);
+        Owner owner = new Owner();
+        ParkingLot parkingLot = owner.createParkingLot(5);
+        SmartAttendant smartAttendant = new SmartAttendant();
+        owner.assign(smartAttendant, parkingLot);
 
         Vehicle vehicle = new Vehicle(anyString(), any(), any());
 
-        Ticket ticket = parkingLotSmartAttendant.park(vehicle);
-        Vehicle unparkedVehicle = parkingLotSmartAttendant.unPark(ticket);
+        Ticket ticket = smartAttendant.park(vehicle);
+        Vehicle unparkedVehicle = smartAttendant.unPark(ticket);
 
         assertEquals(unparkedVehicle, vehicle);
     }
@@ -45,11 +48,12 @@ class SmartAttendantTest {
         // PL1: T T T
         // PL2: T T T
 
-        ParkingLot firstParkingLot = new ParkingLot(3);
-        ParkingLot secondParkingLot = new ParkingLot(3);
+        Owner owner = new Owner();
+        ParkingLot firstParkingLot = owner.createParkingLot(3);
+        ParkingLot secondParkingLot = owner.createParkingLot(3);
         SmartAttendant smartAttendant = new SmartAttendant();
-        smartAttendant.assign(firstParkingLot);
-        smartAttendant.assign(secondParkingLot);
+        owner.assign(smartAttendant, firstParkingLot);
+        owner.assign(smartAttendant, secondParkingLot);
 
         smartAttendant.park(new Vehicle(anyString(), any(), any()));
 
@@ -67,26 +71,28 @@ class SmartAttendantTest {
 
     @Test
     public void TestSmartAttendantToUnParkVehicleWithTicketAfterSmartPark() {
-        ParkingLot parkingLot = new ParkingLot(2);
-        SmartAttendant parkingLotSmartAttendant = new SmartAttendant();
-        parkingLotSmartAttendant.assign(parkingLot);
+        Owner owner = new Owner();
+        ParkingLot parkingLot = owner.createParkingLot(2);
+        SmartAttendant smartAttendant = new SmartAttendant();
+        owner.assign(smartAttendant, parkingLot);
 
         Vehicle vehicle = new Vehicle(anyString(), any(), any());
 
-        Ticket ticket = parkingLotSmartAttendant.park(vehicle);
-        Vehicle unparkedVehicle = parkingLotSmartAttendant.unPark(ticket);
+        Ticket ticket = smartAttendant.park(vehicle);
+        Vehicle unparkedVehicle = smartAttendant.unPark(ticket);
 
         assertEquals(unparkedVehicle, vehicle);
     }
 
     @Test
     public void TestExceptionWhenAllParkingLotsAreFull() {
-        ParkingLot parkingLot = new ParkingLot(1);
-        SmartAttendant parkingLotSmartAttendant = new SmartAttendant();
-        parkingLotSmartAttendant.assign(parkingLot);
+        Owner owner = new Owner();
+        ParkingLot parkingLot = owner.createParkingLot(1);
+        SmartAttendant smartAttendant = new SmartAttendant();
+        owner.assign(smartAttendant, parkingLot);
 
-        parkingLotSmartAttendant.park(new Vehicle(anyString(), any(), any()));
+        smartAttendant.park(new Vehicle(anyString(), any(), any()));
 
-        assertThrows(ParkingSpotNotFoundException.class, () -> parkingLotSmartAttendant.park(new Vehicle(anyString(), any(), any())));
+        assertThrows(ParkingSpotNotFoundException.class, () -> smartAttendant.park(new Vehicle(anyString(), any(), any())));
     }
 }
