@@ -15,8 +15,18 @@ public interface SmartAttendant extends Attendant {
             throw new ParkingLotAssignmentException("Vehicle already parked : " + vehicle);
         }
 
-        // SmartParking logic
-        // Implementation of SmartParking logic
-        throw new ParkingSpotNotFoundException("No Available Parking Spot found for Vehicle : " + vehicle);
+        // Park vehicle in parkingLot which has more available spots in parkingLot
+        ParkingLot parkingLot = null;
+        int availableSpots = 0;
+        for (ParkingLot lot : parkingLots) {
+            if (lot.getAvailableSpots() > availableSpots) {
+                parkingLot = lot;
+                availableSpots = lot.getAvailableSpots();
+            }
+        }
+
+        if (parkingLot == null) throw new ParkingSpotNotFoundException("No parking spot available");
+
+        return parkingLot.park(vehicle);
     }
 }

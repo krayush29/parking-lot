@@ -77,4 +77,14 @@ public class ParkingLot {
         }
         return false;
     }
+
+    public int getAvailableSpots() {
+        int count = 0;
+        for (ParkingSpot parkingSpot : parkingSpots) {
+            if (parkingSpot.isAvailable()) {
+                count++;
+            }
+        }
+        return count;
+    }
 }
