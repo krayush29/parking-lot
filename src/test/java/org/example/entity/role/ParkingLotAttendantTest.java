@@ -17,8 +17,8 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 
 class ParkingLotAttendantTest {
 
@@ -92,13 +92,12 @@ class ParkingLotAttendantTest {
     @Test
     public void TestExceptionWhenAllParkingLotsAreFull() {
         ParkingLotAttendant parkingLotAttendant = new ParkingLotAttendant();
+        ParkingLot parkingLot = new ParkingLot(1);
 
-        ParkingLot mockParkingLot = spy(new ParkingLot(1));
-        when(mockParkingLot.getNearestAvailableSpot()).thenReturn(null);
+        parkingLotAttendant.assign(parkingLot);
+        parkingLotAttendant.park(new Vehicle(anyString(), any(), any()));
 
-        Vehicle vehicle = new Vehicle("UP-03-AH-1440", VehicleType.CAR, VehicleColour.WHITE);
-
-        assertThrows(ParkingSpotNotFoundException.class, () -> parkingLotAttendant.park(vehicle));
+        assertThrows(ParkingSpotNotFoundException.class, () -> parkingLotAttendant.park(new Vehicle(anyString(), any(), any())));
     }
 
     @Test
