@@ -1,4 +1,4 @@
-package org.example.entity.role;
+package org.example.entity.strategy;
 
 import org.example.entity.ParkingLot;
 import org.example.entity.Ticket;
@@ -8,9 +8,10 @@ import org.example.exception.ParkingSpotNotFoundException;
 
 import java.util.List;
 
-public interface SmartAttendable extends Attendable {
+public class SmartParkStrategy implements ParkStrategy {
 
-    default Ticket park(List<ParkingLot> parkingLots, Vehicle vehicle) {
+    @Override
+    public Ticket park(List<ParkingLot> parkingLots, Vehicle vehicle) {
         if (isVehicleParked(parkingLots, vehicle)) {
             throw new ParkingLotAssignmentException("Vehicle already parked : " + vehicle);
         }
