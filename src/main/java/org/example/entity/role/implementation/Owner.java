@@ -10,16 +10,20 @@ import org.example.entity.strategy.ParkStrategy;
 import org.example.exception.ParkingLotAssignmentException;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 public class Owner implements Attendable, Subscriber {
 
     private final List<ParkingLot> parkingLots;
     private final ParkStrategy strategy;
+    private final Queue<String> messages;
 
     public Owner() {
         this.parkingLots = new ArrayList<>();
         this.strategy = new NormalParkStrategy();
+        this.messages = new LinkedList<>();
     }
 
     public void assign(Attendable attendable, ParkingLot parkingLot) {
@@ -27,9 +31,10 @@ public class Owner implements Attendable, Subscriber {
 
         switch (attendable) {
             case Owner owner -> {
-                if (this != owner) {
+                if (this != owner)
                     throw new ParkingLotAssignmentException("Owner cannot assign parking lot to another owner");
-                }
+                if (this.parkingLots.contains(parkingLot))
+                    throw new ParkingLotAssignmentException("Parking lot already assigned to the owner");
 
                 this.parkingLots.add(parkingLot);
             }
@@ -40,16 +45,24 @@ public class Owner implements Attendable, Subscriber {
         }
     }
 
-    public Ticket park(Vehicle vehicle) {
-        return strategy.park(this.parkingLots, vehicle);
-    }
-
     public ParkingLot createParkingLot(int numberOfParkingSpots) {
         return new ParkingLot(numberOfParkingSpots, this);
     }
 
+    public Ticket park(Vehicle vehicle) {
+        return strategy.park(this.parkingLots, vehicle);
+    }
+
+    public Vehicle unPark(Ticket ticket) {
+        return this.unPark(this.parkingLots, ticket);
+    }
+
     @Override
     public void update(String message) {
-        System.out.println("Owner received message: " + message);
+        this.messages.add(message);
+    }
+
+    public LinkedList<String> getNotificationMessages() {
+        return (LinkedList<String>) this.messages;
     }
 }

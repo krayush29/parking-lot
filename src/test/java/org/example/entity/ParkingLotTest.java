@@ -14,8 +14,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 class ParkingLotTest {
 
@@ -70,7 +72,7 @@ class ParkingLotTest {
         parkingLot.unPark(ticket);
 
         Integer firstNearestAvailableSlot = parkingLot.getNearestAvailableSpot();
-        parkingLot.park(new Vehicle(anyString(), any(), any()));
+        parkingLot.park(new Vehicle("KA-05-AT-1254", VehicleType.CAR, VehicleColour.WHITE));
         Integer secondNearestAvailableSlot = parkingLot.getNearestAvailableSpot();
 
         assertEquals(0, firstNearestAvailableSlot);
@@ -136,25 +138,28 @@ class ParkingLotTest {
 
     @Test
     public void TestNotifyOwnerWhenParkingLotIsFull() {
-        Owner owner = new Owner();
+        Owner owner = spy(new Owner());
         ParkingLot parkingLot = owner.createParkingLot(1);
-        Vehicle vehicle = new Vehicle(anyString(), any(), any());
+        Vehicle vehicle = new Vehicle("KA-01-HH-1234", VehicleType.CAR, VehicleColour.WHITE);
         parkingLot.registerSubscriber(owner);
 
         assertDoesNotThrow(() -> parkingLot.park(vehicle));
+        verify(owner, times(1)).update(anyString());
     }
 
     @Test
     public void TestNotifyMoreThanOneOwnerWhenParkingLotIsFull() {
-        Owner firstOwner = new Owner();
-        Owner secondOwner = new Owner();
+        Owner firstOwner = spy(new Owner());
+        Owner secondOwner = spy(new Owner());
 
         ParkingLot parkingLot = firstOwner.createParkingLot(1);
 
-        Vehicle vehicle = new Vehicle(anyString(), any(), any());
+        Vehicle vehicle = new Vehicle("KA-01-HH-1234", VehicleType.CAR, VehicleColour.WHITE);
         parkingLot.registerSubscriber(firstOwner);
         parkingLot.registerSubscriber(secondOwner);
 
         assertDoesNotThrow(() -> parkingLot.park(vehicle));
+        verify(firstOwner, times(1)).update(anyString());
+        verify(secondOwner, times(1)).update(anyString());
     }
 }

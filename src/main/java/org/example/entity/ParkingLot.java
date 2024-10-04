@@ -112,9 +112,9 @@ public class ParkingLot {
 
         for (Subscriber subscriber : subscribers) {
             if (this.isFull) {
-                subscriber.update("Parking Lot has became Full");
+                subscriber.update("Parking Lot has became Full: " + this.hashCode());
             } else {
-                subscriber.update("Parking Lot has became Available");
+                subscriber.update("Parking Lot has became Available: " + this.hashCode());
             }
         }
     }

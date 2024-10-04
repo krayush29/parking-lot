@@ -1,13 +1,13 @@
 package org.example.entity;
 
+import org.example.enums.VehicleColour;
+import org.example.enums.VehicleType;
 import org.example.exception.VehicleNullException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 
 class ParkingSpotTest {
 
@@ -26,7 +26,7 @@ class ParkingSpotTest {
     @Test
     public void TestisAvailableBecomeFalseAfterParking() {
         ParkingSpot parkingSpot = new ParkingSpot();
-        parkingSpot.park(new Vehicle(anyString(), any(), any()));
+        parkingSpot.park(new Vehicle("KA-01-HH-1234", VehicleType.CAR, VehicleColour.WHITE));
 
         assertFalse(parkingSpot.isAvailable());
     }
@@ -34,7 +34,7 @@ class ParkingSpotTest {
     @Test
     public void TestisAvailableBecomeTrueAfterUnParking() {
         ParkingSpot parkingSpot = new ParkingSpot();
-        Ticket ticket = parkingSpot.park(new Vehicle(anyString(), any(), any()));
+        Ticket ticket = parkingSpot.park(new Vehicle("KA-01-HH-1234", VehicleType.CAR, VehicleColour.WHITE));
         parkingSpot.unPark(ticket);
 
         assertTrue(parkingSpot.isAvailable());
@@ -43,7 +43,7 @@ class ParkingSpotTest {
     @Test
     public void TestParkedVehicleIsSameAndSpotBecomeUnavailable() {
         ParkingSpot parkingSpot = new ParkingSpot();
-        Vehicle vehicle = new Vehicle(anyString(), any(), any());
+        Vehicle vehicle = new Vehicle("KA-01-HH-1234", VehicleType.CAR, VehicleColour.WHITE);
         parkingSpot.park(vehicle);
 
         assertFalse(parkingSpot.isAvailable());

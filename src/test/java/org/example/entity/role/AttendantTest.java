@@ -20,8 +20,6 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -115,9 +113,9 @@ class AttendantTest {
         ParkingLot parkingLot = owner.createParkingLot(1);
 
         owner.assign(attendant, parkingLot);
-        attendant.park(new Vehicle(anyString(), any(), any()));
+        attendant.park(new Vehicle("KA-01-HH-1234", VehicleType.CAR, VehicleColour.WHITE));
 
-        assertThrows(ParkingSpotNotFoundException.class, () -> attendant.park(new Vehicle(anyString(), any(), any())));
+        assertThrows(ParkingSpotNotFoundException.class, () -> attendant.park(new Vehicle("KA-03-QA-1244", VehicleType.CAR, VehicleColour.WHITE)));
     }
 
     @Test
@@ -171,7 +169,7 @@ class AttendantTest {
         Attendant smartAttendant = new Attendant(new SmartParkStrategy());
         owner.assign(smartAttendant, parkingLot);
 
-        Vehicle vehicle = new Vehicle(anyString(), any(), any());
+        Vehicle vehicle = new Vehicle("KA-01-HH-1234", VehicleType.CAR, VehicleColour.WHITE);
 
         Ticket ticket = smartAttendant.park(vehicle);
         Vehicle unparkedVehicle = smartAttendant.unPark(ticket);
@@ -194,11 +192,11 @@ class AttendantTest {
         owner.assign(smartAttendant, firstParkingLot);
         owner.assign(smartAttendant, secondParkingLot);
 
-        smartAttendant.park(new Vehicle(anyString(), any(), any()));
+        smartAttendant.park(new Vehicle("KA-01-HH-1234", VehicleType.CAR, VehicleColour.WHITE));
 
         assertEquals(2, firstParkingLot.getAvailableSpots());
 
-        smartAttendant.park(new Vehicle(anyString(), any(), any()));
+        smartAttendant.park(new Vehicle("KA-03-QA-1244", VehicleType.CAR, VehicleColour.WHITE));
 
         // Final state
         // PL1: F T T
@@ -215,7 +213,7 @@ class AttendantTest {
         Attendant smartAttendant = new Attendant(new SmartParkStrategy());
         owner.assign(smartAttendant, parkingLot);
 
-        Vehicle vehicle = new Vehicle(anyString(), any(), any());
+        Vehicle vehicle = new Vehicle("KA-01-HH-1234", VehicleType.CAR, VehicleColour.WHITE);
 
         Ticket ticket = smartAttendant.park(vehicle);
         Vehicle unparkedVehicle = smartAttendant.unPark(ticket);
@@ -230,8 +228,8 @@ class AttendantTest {
         Attendant smartAttendant = new Attendant(new SmartParkStrategy());
         owner.assign(smartAttendant, parkingLot);
 
-        smartAttendant.park(new Vehicle(anyString(), any(), any()));
+        smartAttendant.park(new Vehicle("KA-01-HH-1234", VehicleType.CAR, VehicleColour.WHITE));
 
-        assertThrows(ParkingSpotNotFoundException.class, () -> smartAttendant.park(new Vehicle(anyString(), any(), any())));
+        assertThrows(ParkingSpotNotFoundException.class, () -> smartAttendant.park(new Vehicle("KA-03-QA-1244", VehicleType.CAR, VehicleColour.WHITE)));
     }
 }
