@@ -1,5 +1,6 @@
 package org.example.entity;
 
+import org.example.entity.role.Subscriber;
 import org.example.entity.role.implementation.Owner;
 import org.example.enums.VehicleColour;
 import org.example.exception.ParkingLotException;
@@ -13,6 +14,8 @@ import java.util.List;
 
 public class ParkingLot {
     private final List<ParkingSpot> parkingSpots;
+    private final List<Subscriber> subscribers;
+    private boolean isFull = false;
 
     public ParkingLot(Integer numberOfSpots, Owner createdBy) {
         if (createdBy == null) throw new IllegalArgumentException("Owner cannot be null");
@@ -24,6 +27,7 @@ public class ParkingLot {
         for (int i = 0; i < numberOfSpots; i++) {
             this.parkingSpots.add(new ParkingSpot());
         }
+        this.subscribers = new ArrayList<>();
     }
 
     public Ticket park(Vehicle vehicle) {
@@ -34,15 +38,22 @@ public class ParkingLot {
         if (nearestAvailableSlot == null)
             throw new ParkingSpotNotFoundException("No Available Parking Spot found for Vehicle : " + vehicle);
 
-        return parkingSpots.get(nearestAvailableSlot).park(vehicle);
+        Ticket ticket = parkingSpots.get(nearestAvailableSlot).park(vehicle);
+
+        if (getAvailableSpots() == 0) updateStatusAndNotify(this.isFull);
+        return ticket;
     }
 
     public Vehicle unPark(Ticket ticket) {
         if (ticket == null) throw new TicketNullException("Ticket cannot be null");
+        boolean currentStatus = this.isFull;
 
         for (ParkingSpot parkingSpot : parkingSpots) {
             if (parkingSpot.isSameTicket(ticket)) {
-                return parkingSpot.unPark(ticket);
+                Vehicle vehicle = parkingSpot.unPark(ticket);
+
+                if (currentStatus) updateStatusAndNotify(true);
+                return vehicle;
             }
         }
         throw new TicketNotFoundException("Ticket is not associated any assigned parking spot: " + ticket);
@@ -89,5 +100,22 @@ public class ParkingLot {
             }
         }
         return count;
+    }
+
+    public void registerSubscriber(Subscriber subscriber) {
+        if (subscriber == null) throw new IllegalArgumentException("Subscriber cannot be null");
+        subscribers.add(subscriber);
+    }
+
+    private void updateStatusAndNotify(boolean currentStatus) {
+        this.isFull = !currentStatus;
+
+        for (Subscriber subscriber : subscribers) {
+            if (this.isFull) {
+                subscriber.update("Parking Lot has became Full");
+            } else {
+                subscriber.update("Parking Lot has became Available");
+            }
+        }
     }
 }

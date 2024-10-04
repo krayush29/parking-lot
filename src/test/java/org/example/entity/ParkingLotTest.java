@@ -131,4 +131,30 @@ class ParkingLotTest {
 
         assertEquals(expectedVehicle, firstVehicle);
     }
+
+    // Notification
+
+    @Test
+    public void TestNotifyOwnerWhenParkingLotIsFull() {
+        Owner owner = new Owner();
+        ParkingLot parkingLot = owner.createParkingLot(1);
+        Vehicle vehicle = new Vehicle(anyString(), any(), any());
+        parkingLot.registerSubscriber(owner);
+
+        assertDoesNotThrow(() -> parkingLot.park(vehicle));
+    }
+
+    @Test
+    public void TestNotifyMoreThanOneOwnerWhenParkingLotIsFull() {
+        Owner firstOwner = new Owner();
+        Owner secondOwner = new Owner();
+
+        ParkingLot parkingLot = firstOwner.createParkingLot(1);
+
+        Vehicle vehicle = new Vehicle(anyString(), any(), any());
+        parkingLot.registerSubscriber(firstOwner);
+        parkingLot.registerSubscriber(secondOwner);
+
+        assertDoesNotThrow(() -> parkingLot.park(vehicle));
+    }
 }
